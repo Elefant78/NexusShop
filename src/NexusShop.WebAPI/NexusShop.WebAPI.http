@@ -1,0 +1,55 @@
+@host = https://localhost:7150
+
+### 1. Login as admin to get a JWT
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+
+### Capture the token from the login response
+@token = {{login.response.body.accessToken}}
+
+### 2. Get all products (public)
+GET {{host}}/api/products
+
+### 3. Get a single product (public)
+GET {{host}}/api/products/1
+
+### 4. Create a product (Admin only)
+POST {{host}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "USB-C Charger",
+  "description": "65W fast charger",
+  "price": 39.90,
+  "currency": "CHF",
+  "stockQuantity": 100,
+  "categoryId": 1
+}
+
+### 5. Update a product (Admin only)
+PUT {{host}}/api/products/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Wireless Headphones (2024)",
+  "description": "Updated model",
+  "price": 219.00,
+  "currency": "CHF",
+  "stockQuantity": 40,
+  "isActive": true
+}
+
+### 6. Delete a product (Admin only)
+DELETE {{host}}/api/products/3
+Authorization: Bearer {{token}}
+
+### 7. Get all categories (public)
+GET {{host}}/api/categories

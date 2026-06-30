@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>NexusShop.Domain</RootNamespace>
+    <AssemblyName>NexusShop.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <!--
+    The Domain layer is the heart of the application.
+    It must NOT reference any other project or external NuGet package.
+  -->
+
+</Project>
