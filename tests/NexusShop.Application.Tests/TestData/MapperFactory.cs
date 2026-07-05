@@ -1,15 +1,3 @@
-using AutoMapper;
-using NexusShop.Application.Common.Mapping;
-
-namespace NexusShop.Application.Tests.TestData;
-
-/// <summary>Builds a real AutoMapper instance from the production MappingProfile.</summary>
-public static class MapperFactory
-{
-    public static IMapper Create()
-    {
-        var configuration = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
-        configuration.AssertConfigurationIsValid();
-        return configuration.CreateMapper();
-    }
-}
+// Intentionally empty.
+// AutoMapper was removed in favour of explicit mapping (MappingExtensions),
+// so no mapper factory is needed in tests. This file can be safely deleted.

@@ -1,4 +1,3 @@
-using AutoMapper;
 using FluentAssertions;
 using Moq;
 using NexusShop.Application.Common.Exceptions;
@@ -18,7 +17,6 @@ public sealed class ProductServiceTests
     private readonly Mock<IUnitOfWork> _uow = new();
     private readonly Mock<IProductRepository> _products = new();
     private readonly Mock<ICategoryRepository> _categories = new();
-    private readonly IMapper _mapper = MapperFactory.Create();
     private readonly ProductService _sut;
 
     public ProductServiceTests()
@@ -28,7 +26,6 @@ public sealed class ProductServiceTests
 
         _sut = new ProductService(
             _uow.Object,
-            _mapper,
             new CreateProductDtoValidator(),
             new UpdateProductDtoValidator());
     }

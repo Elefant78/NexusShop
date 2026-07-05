@@ -87,7 +87,7 @@ action — the inner layers define the contracts, the outer layers fulfil them.
 | Runtime / language | .NET 8, C# 12                                          |
 | Web framework      | ASP.NET Core Web API                                   |
 | Persistence        | Entity Framework Core 8 (SQL Server / SQLite)          |
-| Object mapping     | AutoMapper                                             |
+| Object mapping     | Explicit mapping via extension methods (no AutoMapper) |
 | Validation         | FluentValidation                                       |
 | Security           | JWT Bearer authentication, role-based authorization    |
 | API documentation  | Swashbuckle (Swagger / OpenAPI)                       |
@@ -239,6 +239,10 @@ NexusShop/
   status codes by a single middleware, keeping controllers thin.
 - **Provider-agnostic persistence.** The same model runs on SQLite and SQL Server;
   `HasPrecision(18,2)` is used instead of a provider-specific column type.
+- **Explicit mapping over AutoMapper.** Entity-to-DTO mapping is done with small,
+  compile-time-checked extension methods. This removes a third-party dependency,
+  keeps the mappings trivial to read and debug, and avoids a known AutoMapper
+  advisory whose fix is only available in the now-commercial releases.
 
 ---
 

@@ -1,6 +1,6 @@
-using AutoMapper;
 using FluentValidation;
 using NexusShop.Application.Common.Exceptions;
+using NexusShop.Application.Common.Mapping;
 using NexusShop.Application.DTOs;
 using NexusShop.Application.Interfaces;
 using NexusShop.Domain.Entities;
@@ -12,23 +12,20 @@ namespace NexusShop.Application.Services;
 public sealed class CategoryService : ICategoryService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IValidator<CreateCategoryDto> _createValidator;
 
     public CategoryService(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
         IValidator<CreateCategoryDto> createValidator)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _createValidator = createValidator;
     }
 
     public async Task<IReadOnlyList<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var categories = await _unitOfWork.Categories.ListAllAsync(cancellationToken);
-        return _mapper.Map<IReadOnlyList<CategoryDto>>(categories);
+        return categories.ToDtoList();
     }
 
     public async Task<CategoryDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -37,7 +34,7 @@ public sealed class CategoryService : ICategoryService
         if (category is null)
             throw new NotFoundException(nameof(Category), id);
 
-        return _mapper.Map<CategoryDto>(category);
+        return category.ToDto();
     }
 
     public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto, CancellationToken cancellationToken = default)
@@ -51,6 +48,6 @@ public sealed class CategoryService : ICategoryService
         await _unitOfWork.Categories.AddAsync(category, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<CategoryDto>(category);
+        return category.ToDto();
     }
 }

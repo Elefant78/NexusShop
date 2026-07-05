@@ -1,14 +1,20 @@
 # Builds the solution and runs all tests with code coverage.
-# Usage:  pwsh ./verify.ps1   (or run in Developer PowerShell for VS)
+# Runs from the script's own folder, so you can start it from anywhere.
+# Usage:  .\verify.ps1   (in PowerShell)
 $ErrorActionPreference = "Stop"
+Set-Location -Path $PSScriptRoot
 
-Write-Host "Restoring..." -ForegroundColor Cyan
-dotnet restore
+function Invoke-Step($label, [scriptblock]$cmd) {
+    Write-Host $label -ForegroundColor Cyan
+    & $cmd
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Step failed (exit code $LASTEXITCODE)." -ForegroundColor Red
+        exit $LASTEXITCODE
+    }
+}
 
-Write-Host "Building (Release)..." -ForegroundColor Cyan
-dotnet build --configuration Release --no-restore
-
-Write-Host "Running tests with coverage..." -ForegroundColor Cyan
-dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"
+Invoke-Step "Restoring..."              { dotnet restore }
+Invoke-Step "Building (Release)..."     { dotnet build --configuration Release --no-restore }
+Invoke-Step "Running tests with coverage..." { dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" }
 
 Write-Host "Done." -ForegroundColor Green

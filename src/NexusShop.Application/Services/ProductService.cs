@@ -1,6 +1,6 @@
-using AutoMapper;
 using FluentValidation;
 using NexusShop.Application.Common.Exceptions;
+using NexusShop.Application.Common.Mapping;
 using NexusShop.Application.DTOs;
 using NexusShop.Application.Interfaces;
 using NexusShop.Domain.Entities;
@@ -18,18 +18,15 @@ namespace NexusShop.Application.Services;
 public sealed class ProductService : IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
     private readonly IValidator<CreateProductDto> _createValidator;
     private readonly IValidator<UpdateProductDto> _updateValidator;
 
     public ProductService(
         IUnitOfWork unitOfWork,
-        IMapper mapper,
         IValidator<CreateProductDto> createValidator,
         IValidator<UpdateProductDto> updateValidator)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
         _createValidator = createValidator;
         _updateValidator = updateValidator;
     }
@@ -37,7 +34,7 @@ public sealed class ProductService : IProductService
     public async Task<IReadOnlyList<ProductDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var products = await _unitOfWork.Products.ListAllAsync(cancellationToken);
-        return _mapper.Map<IReadOnlyList<ProductDto>>(products);
+        return products.ToDtoList();
     }
 
     public async Task<ProductDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
@@ -46,13 +43,13 @@ public sealed class ProductService : IProductService
         if (product is null)
             throw new NotFoundException(nameof(Product), id);
 
-        return _mapper.Map<ProductDto>(product);
+        return product.ToDto();
     }
 
     public async Task<IReadOnlyList<ProductDto>> GetByCategoryAsync(int categoryId, CancellationToken cancellationToken = default)
     {
         var products = await _unitOfWork.Products.ListByCategoryAsync(categoryId, cancellationToken);
-        return _mapper.Map<IReadOnlyList<ProductDto>>(products);
+        return products.ToDtoList();
     }
 
     public async Task<ProductDto> CreateAsync(CreateProductDto dto, CancellationToken cancellationToken = default)
@@ -76,7 +73,7 @@ public sealed class ProductService : IProductService
         await _unitOfWork.Products.AddAsync(product, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ProductDto>(product);
+        return product.ToDto();
     }
 
     public async Task<ProductDto> UpdateAsync(int id, UpdateProductDto dto, CancellationToken cancellationToken = default)
@@ -102,7 +99,7 @@ public sealed class ProductService : IProductService
         _unitOfWork.Products.Update(product);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ProductDto>(product);
+        return product.ToDto();
     }
 
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)

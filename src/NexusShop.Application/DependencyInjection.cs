@@ -7,7 +7,7 @@ using NexusShop.Application.Services;
 namespace NexusShop.Application;
 
 /// <summary>
-/// Registers all Application-layer services (use-cases, AutoMapper, validators)
+/// Registers all Application-layer services (use-cases and validators)
 /// with the DI container. Called from the WebAPI's Program.cs.
 /// </summary>
 public static class DependencyInjection
@@ -16,7 +16,6 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        services.AddAutoMapper(assembly);
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddScoped<IProductService, ProductService>();

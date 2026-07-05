@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Builds the solution and runs all tests with code coverage.
+# Runs from the script's own folder, so you can start it from anywhere.
 set -euo pipefail
+cd "$(dirname "$0")"
 echo "Restoring..."
 dotnet restore
 echo "Building (Release)..."

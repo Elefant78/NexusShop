@@ -19,7 +19,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var provider = configuration.GetValue<string>("DatabaseProvider") ?? "Sqlite";
+        var provider = configuration["DatabaseProvider"] ?? "Sqlite";
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {

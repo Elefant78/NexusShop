@@ -1,4 +1,3 @@
-using AutoMapper;
 using FluentAssertions;
 using Moq;
 using NexusShop.Application.Common.Exceptions;
@@ -17,13 +16,12 @@ public sealed class CategoryServiceTests
 {
     private readonly Mock<IUnitOfWork> _uow = new();
     private readonly Mock<ICategoryRepository> _categories = new();
-    private readonly IMapper _mapper = MapperFactory.Create();
     private readonly CategoryService _sut;
 
     public CategoryServiceTests()
     {
         _uow.SetupGet(u => u.Categories).Returns(_categories.Object);
-        _sut = new CategoryService(_uow.Object, _mapper, new CreateCategoryDtoValidator());
+        _sut = new CategoryService(_uow.Object, new CreateCategoryDtoValidator());
     }
 
     [Fact]
